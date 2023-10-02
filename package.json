@@ -9,10 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@prisma/client": "5.3.1",
     "@rainbow-me/rainbowkit": "^1.0.11",
+    "ethers": "^5",
     "next": "latest",
     "react": "latest",
     "react-dom": "latest",
+    "userop": "^0.3.3",
     "viem": "^1.14.0",
     "wagmi": "^1.4.2"
   },
@@ -24,6 +27,7 @@
     "eslint": "latest",
     "eslint-config-next": "latest",
     "postcss": "latest",
+    "prisma": "^5.3.1",
     "tailwindcss": "latest",
     "typescript": "latest"
   }
