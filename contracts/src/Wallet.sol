@@ -9,7 +9,12 @@ import {Initializable} from "@openzeppelin/contracts/proxy/utils/Initializable.s
 import {UUPSUpgradeable} from "@openzeppelin/contracts/proxy/utils/UUPSUpgradeable.sol";
 import {TokenCallbackHandler} from "account-abstraction/samples/callback/TokenCallbackHandler.sol";
 
-contract Wallet is BaseAccount, Initializable {
+contract Wallet is
+    BaseAccount,
+    Initializable,
+    UUPSUpgradeable,
+    TokenCallbackHandler
+{
     address public immutable walletFactory;
     IEntryPoint private immutable _entryPoint;
     using ECDSA for bytes32;
@@ -45,7 +50,7 @@ contract Wallet is BaseAccount, Initializable {
 
     function _validateSignature(
         UserOperation calldata userOp, // UserOperation data structure passed as input
-        bytes userOpHash // Hash of the UserOperation without the signatures
+        bytes32 userOpHash // Hash of the UserOperation without the signatures
     ) internal view override returns (uint256) {
         // Convert the userOpHash to an Ethereum Signed Message Hash
         bytes32 hash = userOpHash.toEthSignedMessageHash();
@@ -54,7 +59,7 @@ contract Wallet is BaseAccount, Initializable {
         bytes[] memory signatures = abi.decode(userOp.signature, (bytes[]));
 
         // Loop through all the owners of the wallet
-        for (uint i = 0; i < owners.length; i++) {
+        for (uint256 i = 0; i < owners.length; i++) {
             // Recover the signer's address from each signature
             // If the recovered address doesn't match the owner's address, return SIG_VALIDATION_FAILED
             if (owners[i] != hash.recover(signatures[i])) {
@@ -95,4 +100,34 @@ contract Wallet is BaseAccount, Initializable {
             _call(dests[i], values[i], funcs[i]);
         }
     }
+
+    function _authorizeUpgrade(
+        address
+    ) internal view override _requireFromEntryPointOrFactory {}
+
+    function encodeSignatures(
+        bytes[] memory signatures
+    ) public pure returns (bytes memory) {
+        return abi.encode(signatures);
+    }
+
+    function getDeposit() public view returns (uint) {
+        return entryPoint().balanceOf(address(this));
+    }
+
+    function addDeposit() public payable {
+        entryPoint().depositTo{value: msg.value}(address(this));
+    }
+
+    receive() external payable {}
+
+    // ?    Here's what each function does:
+
+    //? - encodeSignatures: This function encodes the signatures into a bytes array, which can be used to pass as data when making calls to the contract.
+
+    //? - getDeposit: This function checks the balance of the Wallet within EntryPoint.
+
+    //? - addDeposit: This function adds a deposit for Wallet in EntryPoint.
+
+    //? - receive: This function allows the contract to accept ETH.
 }
