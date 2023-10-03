@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
         // This computes the counterfactual address for the wallet without deploying it 
         const walletAddress = await walletFactoryContract.getAddress(signers, salt);
 
-        // Use prisma client to create a new wallet int the database with the signers, salt, address and isDeployed set to false
+        // Use prisma client to create a new wallet in the database with the signers, salt, address and isDeployed set to false
         const response = await prisma.wallet.create({
             data: {
                 salt: salt,
