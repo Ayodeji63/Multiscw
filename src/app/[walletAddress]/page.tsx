@@ -1,9 +1,11 @@
+"use client"
 // Import necessary modules and hooks
 import { getUserOpForETHTransfer } from "@/utils/getUserOpForETHTransfer";
 import { parseEther } from "ethers/lib/utils";
 import { useState } from "react";
 import { useAccount, useWalletClient } from "wagmi";
 import getUserOpHash from "@/utils/getUserOpHash";
+import TransactionsList from "@/components/transactionList";
 // Define the WalletPage component
 
 export default function WalletPage({params: {walletAddress},
@@ -141,6 +143,9 @@ return (
         `Create Txn`
       )}
     </button>
+    {userAddress && (
+        <TransactionsList address={userAddress} walletAddress={walletAddress} />
+      )}
   </div>
 );
 }
