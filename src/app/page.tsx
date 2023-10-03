@@ -1,5 +1,6 @@
 "use client";
 
+import WalletList from "@/components/walletList";
 import { useIsMounted } from "@/hooks/useIsMounted";
 import Link from "next/link";
 import { Fragment } from "react";
@@ -25,6 +26,7 @@ export default function Home() {
               </a>
             </Link>
           )}
+          {address && <WalletList address={address} />}
         </Fragment>
       </div>
     </main>
