@@ -29,6 +29,8 @@ export default function WalletPage({params: {walletAddress},
 
             // Convert the amount to a big integer
             const amountBigInt = parseEther(amount.toString());
+            console.log(walletAddress);
+            
 
             // Get the user operation for the ETH transfer
             const userOp = await getUserOpForETHTransfer(

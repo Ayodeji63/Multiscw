@@ -86,7 +86,8 @@ const sendTransaction = async (transaction: TransactionWithSignatures) => {
 
     // Get the user operation from the transaction
     const userOp = transaction.userOp as unknown as IUserOperation;
-
+    console.log(transaction);
+    
     // Initialize the bundler's client
     const client = await Client.init(BUNDLER_RPC_URL);
 
@@ -107,12 +108,12 @@ const sendTransaction = async (transaction: TransactionWithSignatures) => {
       throw new Error("Fewer signatures received than expected");
 
     // Get the initCode from the user operation
-    let initCode = userOp.initCode as Uint8Array;
+      let initCode = userOp.initCode as Uint8Array;
 
     // If the wallet is already deployed, set the initCode to an empty array
-    if (transaction.wallet.isDeployed) {
-      initCode = Uint8Array.from([]);
-    }
+    // if (transaction.wallet.isDeployed) {
+    //   initCode = Uint8Array.from([]);
+    // }
 
     // Get the user operation builder
     const builder = await getUserOperationBuilder(

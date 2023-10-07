@@ -7,12 +7,12 @@ import { getUserOperationBuilder } from "./getUserOperationBuilder";
 
 export async function getUserOpForETHTransfer(walletAddress:string, owners: string[], salt: string, toAddress: string, value: BigNumber, isDeployed?: boolean) {
     try {
-        let initCode = Uint8Array.from([]);
+            let initCode = Uint8Array.from([]);
         if (!isDeployed) {
             // Encode the function data for creating a new account
             const data = walletFactoryContract.interface.encodeFunctionData("createAccount", [owners, salt]);
             // Initialize the initCode which will be used to deploy a new wallet
-            initCode = concat([WALLET_FACTORY_ADDRESS]);
+          initCode = concat([WALLET_FACTORY_ADDRESS, data]);
         }
 
         // Get the nonce for the wallet address with a key of 0
